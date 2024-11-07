@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Data from Text Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="section">
+        <h2>JavaScript Projects</h2>
+        <button onclick="copyData('DC5.txt')">study of random process (5th)</button>
+        <button onclick="copyData('DC6.txt')">study of performance of M-ary psk and mqam (6th)</button>
+        <button onclick="copyData('DC7.txt')">study of performance of bpsk reciever (7th)</button>
+        <button onclick="copyData('DC8.txt')">study of source coding technique (8th)</button>
+        <button onclick="copyData('DC9.txt')">study of linear block codes (9th)</button>
+        <button onclick="copyData('DC10.txt')">study of cyclic code (10th)</button>
+    </div>
+
+    <script>
+        async function copyData(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const text = await response.text();
+
+                // Split the text by the delimiter and filter empty sections
+                const sections = text.split(/-{5,}/).map(section => section.trim()).filter(section => section.length > 0);
+
+                // Reverse the order of sections to copy from down to up
+                sections.reverse();
+
+                // Copy each section to the clipboard one by one
+                for (const section of sections) {
+                    await navigator.clipboard.writeText(section);
+                    console.log(`Copied to clipboard: ${section}`);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before copying the next
+                }
+
+                // Close the window after copying all sections
+                setTimeout(() => {
+                    //window.close();
+                }, 1000);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
